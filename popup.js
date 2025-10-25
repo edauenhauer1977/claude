@@ -6,12 +6,14 @@ const clearAllBtn = document.getElementById('clearAll');
 const toggleFilterBtn = document.getElementById('toggleFilter');
 const filterCount = document.getElementById('filterCount');
 const blockedCount = document.getElementById('blockedCount');
+const versionElement = document.getElementById('version');
 
 // Initialisierung
 document.addEventListener('DOMContentLoaded', () => {
   loadKeywords();
   loadStats();
   loadFilterState();
+  loadVersion();
 });
 
 // Keyword hinzufügen
@@ -152,6 +154,12 @@ function showNotification(message) {
   setTimeout(() => {
     notification.remove();
   }, 2000);
+}
+
+// Version aus Manifest laden
+function loadVersion() {
+  const manifest = chrome.runtime.getManifest();
+  versionElement.textContent = manifest.version;
 }
 
 // Statistiken regelmäßig aktualisieren

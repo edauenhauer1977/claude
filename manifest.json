@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Content Bias Filter",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Filter und blende Webinhalte basierend auf Keywords aus, um Bias zu reduzieren",
   "permissions": [
     "storage",
-    "activeTab"
+    "activeTab",
+    "contextMenus"
   ],
   "host_permissions": [
     "*://*.youtube.com/*",
