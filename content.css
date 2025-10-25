@@ -1,0 +1,25 @@
+/* CSS für gefilterte Inhalte */
+
+.bias-filter-hidden {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+/* Optional: Smooth fade out effect (deaktiviert für bessere Performance) */
+/*
+.bias-filter-hidden {
+  animation: fadeOut 0.3s ease-out forwards;
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+*/

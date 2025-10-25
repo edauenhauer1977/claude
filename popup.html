@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Bias Filter</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Content Bias Filter</h1>
+    <p class="description">Verwalte Keywords, um unerwünschte Inhalte auszublenden</p>
+
+    <div class="input-section">
+      <input
+        type="text"
+        id="keywordInput"
+        placeholder="Keyword eingeben (z.B. Ukraine Krieg)"
+        autocomplete="off"
+      >
+      <button id="addKeyword">Hinzufügen</button>
+    </div>
+
+    <div class="stats">
+      <span id="filterCount">0 Keywords aktiv</span>
+      <span id="blockedCount">0 Elemente ausgeblendet</span>
+    </div>
+
+    <div class="keywords-section">
+      <h2>Aktive Keywords</h2>
+      <div id="keywordsList" class="keywords-list"></div>
+    </div>
+
+    <div class="actions">
+      <button id="clearAll" class="btn-secondary">Alle löschen</button>
+      <button id="toggleFilter" class="btn-toggle">Filter aktiviert</button>
+    </div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
