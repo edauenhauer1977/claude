@@ -45,6 +45,11 @@ function filterPage() {
     filterGoogleSearch();
   }
 
+  // Bild.de und andere News-Seiten
+  if (window.location.hostname.includes('bild.de')) {
+    filterBildDe();
+  }
+
   // Generische Filterung für andere Seiten
   filterGeneric();
 
@@ -86,20 +91,110 @@ function filterGoogleSearch() {
   });
 }
 
-// Generische Filterung für alle Seiten
-function filterGeneric() {
-  const textElements = document.querySelectorAll('article, [role="article"], .post, .item, .card, a, h1, h2, h3, h4, p');
+// Bild.de Filterung
+function filterBildDe() {
+  // Bild.de verwendet verschiedene Container für Artikel
+  const selectors = [
+    'article',                          // Standard-Artikel
+    '[data-id]',                        // Artikel mit data-id
+    '.teaser',                          // Teaser-Elemente
+    '.story',                           // Story-Container
+    '.brick',                           // Brick-Layout
+    '[class*="article"]',               // Alle Klassen mit "article"
+    '[class*="teaser"]',                // Alle Klassen mit "teaser"
+    'a[href*="/"]'                      // Links zu Artikeln
+  ];
 
-  textElements.forEach(element => {
-    // Überspringe bereits verarbeitete Elemente
-    if (element.hasAttribute('data-bias-filter-processed')) {
-      return;
+  selectors.forEach(selector => {
+    const elements = document.querySelectorAll(selector);
+    elements.forEach(element => {
+      // Prüfe das Element und seine direkten Kinder
+      if (shouldBlockElement(element)) {
+        // Finde den äußersten relevanten Container
+        const container = findArticleContainer(element);
+        hideElement(container);
+      } else {
+        showElement(element);
+      }
+    });
+  });
+}
+
+// Finde den übergeordneten Artikel-Container
+function findArticleContainer(element) {
+  let current = element;
+  let candidate = element;
+
+  // Gehe bis zu 5 Ebenen nach oben
+  for (let i = 0; i < 5 && current.parentElement; i++) {
+    current = current.parentElement;
+
+    // Prüfe ob dieser Container ein Artikel-Container ist
+    const tagName = current.tagName.toLowerCase();
+    const className = current.className.toLowerCase();
+
+    if (tagName === 'article' ||
+        className.includes('teaser') ||
+        className.includes('article') ||
+        className.includes('story') ||
+        className.includes('brick') ||
+        className.includes('item') ||
+        className.includes('card') ||
+        current.hasAttribute('data-id')) {
+      candidate = current;
     }
 
-    element.setAttribute('data-bias-filter-processed', 'true');
+    // Stoppe bei Body oder Main
+    if (tagName === 'body' || tagName === 'main' || tagName === 'section') {
+      break;
+    }
+  }
 
-    if (shouldBlockElement(element)) {
-      hideElement(element);
+  return candidate;
+}
+
+// Generische Filterung für alle Seiten
+function filterGeneric() {
+  // Priorisiere Container-Elemente über einzelne Text-Elemente
+  const containerSelectors = [
+    'article',
+    '[role="article"]',
+    '.post',
+    '.item',
+    '.card',
+    '.entry',
+    '.content-item',
+    '[class*="article"]',
+    '[class*="post"]',
+    '[class*="item"]',
+    '[class*="card"]',
+    '[class*="teaser"]',
+    '[class*="story"]'
+  ];
+
+  // Filtere Container
+  containerSelectors.forEach(selector => {
+    try {
+      const elements = document.querySelectorAll(selector);
+      elements.forEach(element => {
+        if (shouldBlockElement(element)) {
+          hideElement(element);
+        } else {
+          showElement(element);
+        }
+      });
+    } catch (e) {
+      // Ignoriere ungültige Selektoren
+    }
+  });
+
+  // Filtere auch einzelne Links (weniger aggressiv)
+  const links = document.querySelectorAll('a[href]');
+  links.forEach(link => {
+    // Nur größere Links filtern (wahrscheinlich Artikel-Links)
+    if (link.textContent.length > 20 && shouldBlockElement(link)) {
+      const container = findArticleContainer(link);
+      hideElement(container);
     }
   });
 }
