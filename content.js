@@ -212,7 +212,6 @@ function shouldBlockElement(element) {
 function hideElement(element) {
   if (!element.hasAttribute('data-bias-filter-hidden')) {
     element.setAttribute('data-bias-filter-hidden', 'true');
-    element.style.setProperty('display', 'none', 'important');
     element.classList.add('bias-filter-hidden');
     blockedCount++;
   }
@@ -222,7 +221,6 @@ function hideElement(element) {
 function showElement(element) {
   if (element.hasAttribute('data-bias-filter-hidden')) {
     element.removeAttribute('data-bias-filter-hidden');
-    element.style.removeProperty('display');
     element.classList.remove('bias-filter-hidden');
   }
 }
